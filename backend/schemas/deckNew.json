@@ -1,0 +1,29 @@
+{
+
+  "$id": "http://our.decks.com/deckNew.schema.json",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "archidekt_num": {
+      "type": "integer",
+      "minLength": 6,
+      "maxLength": 10
+    },
+    "commander": {
+      "type": "string"
+    },
+    "commanderUrl": {
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "archidekt_num"
+  ]
+}
