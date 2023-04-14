@@ -6,7 +6,7 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 
 const { BadRequestError } = require("../expressError");
-const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
+const { ensureCorrectUserOrAdmin, ensureLoggedIn } = require("../middleware/auth");
 const Deck = require("../models/deck");
 
 const deckNewSchema = require("../schemas/deckNew.json");
@@ -16,21 +16,22 @@ const router = new express.Router();
 
 /** POST / { deck } =>  { deck }
  *
- * deck should be { archidekt_num, name, commander,commander_url }
+ * deck should be { archidekt_num, name }
  *
- * Returns { archidekt_num, name, commander,commander_url }
+ * Returns { archidekt_num, name}
  *
  * Authorization required: correct user or Admin
  */
 
-router.post("/", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.post("/", /*ensureLoggedIn,*/ async function (req, res, next) {
   try {
+    console.log("Validator",validator.valid)
+    console.log("res.locals", res.locals.user)
     const validator = jsonschema.validate(req.body, deckNewSchema);
-    if (!validator.valid) {
+if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }
-
     const deck = await Deck.create(req.body);
     return res.status(201).json({ deck });
   } catch (err) {
@@ -41,7 +42,7 @@ router.post("/", ensureCorrectUserOrAdmin, async function (req, res, next) {
 
 /** GET /[archidekt_num]  =>  { deck }
  *
- *  Deck is { archidekt_num, name, description, numEmployees, logoUrl, jobs }
+ *  Deck is { archidekt_num, name }
  *   where jobs is [{ id, title, salary, equity }, ...]
  *
  * Authorization required: none
@@ -62,7 +63,7 @@ router.get("/:archidekt_num", async function (req, res, next) {
  * Authorization: correct user or admin
  */
 
-router.delete("/:archidekt_num", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.delete("/:archidekt_num", ensureLoggedIn, async function (req, res, next) {
   try {
     await Deck.remove(req.params.archidekt_num);
     return res.json({ deleted: req.params.archidekt_num });

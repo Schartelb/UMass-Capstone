@@ -1,8 +1,6 @@
 CREATE TABLE decks (
   archidekt_num INTEGER PRIMARY KEY CHECK (archidekt_num >= 0),
-  name TEXT UNIQUE NOT NULL,
-  commander TEXT NOT NULL,
-  commander_url TEXT
+  name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE users (

@@ -13,10 +13,10 @@ class Deck {
    *
    * Returns { archidekt_num, name, commander,commander_url }
    *
-   * Throws BadRequestError if company already in database.
+   * Throws BadRequestError if deck already in database.
    * */
 
-  static async create({ archidekt_num, name, commander,commander_url }) {
+  static async create({ archidekt_num, name }) {
     const duplicateCheck = await db.query(
           `SELECT archidekt_num
            FROM decks
@@ -24,18 +24,16 @@ class Deck {
         [archidekt_num]);
 
     if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate company: ${archidekt_num}`);
+      throw new BadRequestError(`Duplicate deck: ${archidekt_num}`);
 
     const result = await db.query(
           `INSERT INTO decks
-           (archidekt_num, name, commander,commander_url)
-           VALUES ($1, $2, $3, $4, $5)
-           RETURNING archidekt_num, name, commander,commander_url AS "commanderUrl"`,
+           (archidekt_num, name)
+           VALUES ($1, $2)
+           RETURNING archidekt_num, name`,
         [
           archidekt_num,
-          name,
-          commander,
-          commander_url,
+          name
         ],
     );
     const deck = result.rows[0];

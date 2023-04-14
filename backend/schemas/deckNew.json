@@ -12,13 +12,6 @@
       "type": "integer",
       "minLength": 6,
       "maxLength": 10
-    },
-    "commander": {
-      "type": "string"
-    },
-    "commanderUrl": {
-      "type": "string",
-      "format": "uri"
     }
   },
   "additionalProperties": false,
