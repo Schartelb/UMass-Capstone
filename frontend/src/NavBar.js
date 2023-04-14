@@ -19,7 +19,7 @@ const NavBar = ({ setLoginorSignup }) => {
             setLoginorSignup(target)
             const modal = document.querySelector(".modal")
             const closeBtn = document.querySelector(".close")
-            target == "Login" || target == "Signup" ?
+            target === "Login" || target === "Signup" ?
                 modal.style.display = "block" :
                 modal.style.display = "none"
             closeBtn.addEventListener("click", () => {
@@ -40,13 +40,13 @@ const NavBar = ({ setLoginorSignup }) => {
 
                 <Nav className="ml-auto" navbar>
 
-                    {token === 'undefined' && <> <NavItem className="nav">
+                    {token === "null" && <> <NavItem className="nav">
                         <div onClick={handleClick}>Login</div >
                     </NavItem>
                         <NavItem className="nav">
                             <div onClick={handleClick}>Signup</div >
                         </NavItem></>}
-                    {token !== 'undefined' && <><NavItem onClick={profileClick}>
+                    {token !== "null" && <><NavItem onClick={profileClick}>
                         Profile
                     </NavItem >
                         <NavItem className="nav" onClick={handleClick}>Logout</NavItem></>}

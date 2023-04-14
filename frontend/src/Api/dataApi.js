@@ -1,11 +1,14 @@
 import axios from "axios";
+import UserApi from "./userApi";
 
 const SCRYFALL = "https://api.scryfall.com/cards/"
 const ARCHIDEKT = `https://archidekt.com/api/decks/`
+
+
 class DollaryApi {
 
   static async request(endpoint, data = {}, method = "get") {
-    console.debug("API Call:", endpoint, data, method);
+    // console.debug("API Call:", endpoint, data, method);
     const url = endpoint
     try {
       return (await axios({ url, method })).data;
@@ -18,7 +21,7 @@ class DollaryApi {
 
   static async singleGet(name) {
     try {
-      let cardData = await axios.get(SCRYFALL + `search?q=${name} order:usd`)
+      let cardData = await this.request(SCRYFALL + `search?q=${name} order:usd`)
       return cardData.data
     }
     catch (error) {
@@ -26,44 +29,58 @@ class DollaryApi {
     }
   }
 
+  /** Takes input, formats into array, then returns formatted list from Scryfall */
   static async multiCall(cardList) {
     let cardArray = cardList.split('\n')
     let cardListOut = await this.formatResponse(cardArray.map(card => `!"${card}"`))
     return cardListOut
   }
 
+  /** Calls Archidekt API and returns entire Deck list */
   static async archidekt(deck) {
-    let res = await axios.get(ARCHIDEKT + deck + "/")
-      .then(response => { this.formatResponse(response.data.cards.map(card => `!"${card.card.oracleCard.name}"`)) })
+    try {
+      let res = await this.request(ARCHIDEKT + deck + "/")
+        .then(response => {
+          UserApi.addDeck({
+            "archidekt_num": response.id,
+            "name": response.name
+          })
+      this.formatResponse(response.cards.map(card => `!"${card.card.oracleCard.name}"`))
+    })
+
     return (res)
   }
-
+  catch(error) {
+    console.log("Archidekt Fetch Error: ", error)
+  }
+}
 
   static async formatResponse(cardList) {
-    let deckInfo = Promise.all(cardList.map(async (card) => await this.singleGet(card)))
-    try {
-      const dataDump = await deckInfo
-      let formattedData = dataDump.map((card) => {
-        let cardInfo = card.data[0]
-        let output = {}
-        output["name"] = cardInfo.name
-        output["price"] = cardInfo.prices.usd ? cardInfo.prices.usd : cardInfo.prices.usd_foil
-        if (cardInfo.card_faces) {
-          output["img"] = cardInfo.card_faces.map(face => {
-            return face.image_uris.small
-          })
-        } else {
-          output["img"] = cardInfo.image_uris.small
-        }
-        output["edhrec"] = cardInfo.related_uris.edhrec
-        output["rulings"] = cardInfo.related_uris.gatherer
-        return output
+  let deckInfo = Promise.all(cardList.map(async (card) => await this.singleGet(card)))
+  try {
+    const dataDump = await deckInfo
+    let formattedData = dataDump.map((card) => {
+      let cardInfo = card[0]
+      let output = {}
+      // if(cardInfo.categories==="Commander"){output["commander"]=true}
+      output["name"] = cardInfo.name
+      output["price"] = cardInfo.prices.usd ? cardInfo.prices.usd : cardInfo.prices.usd_foil
+      if (cardInfo.card_faces) {
+        output["img"] = cardInfo.card_faces.map(face => {
+          return face.image_uris.small
+        })
+      } else {
+        output["img"] = cardInfo.image_uris.small
       }
-      )
-      return formattedData
-    } catch (error) {
-      console.log("Format Error: ", error)
+      output["edhrec"] = cardInfo.related_uris.edhrec
+      output["rulings"] = cardInfo.related_uris.gatherer
+      return output
     }
+    )
+    return formattedData
+  } catch (error) {
+    console.log("Format Error: ", error)
   }
+}
 }
 export default DollaryApi

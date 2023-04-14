@@ -12,15 +12,12 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class UserApi {
   // the token for interactive with the API will be stored here.
-  // static token;
+   static token;
 
   static async request(endpoint, data = {}, method = "get") {
-    const token = localStorage.getItem("token")
     console.debug("API Call:", endpoint, data, method);
     const url = `${BASE_URL}/${endpoint}`;
-    const headers = { Authorization: `Bearer ${/*UserApi.*/token}` };
-    console.log("Header", headers)
-    console.log("Local Storage",localStorage)
+    const headers = { Authorization: `Bearer ${this.token}` };
     const params = (method === "get")
       ? data
       : {};
@@ -39,13 +36,14 @@ class UserApi {
 /** POST request for user token */
 
   static async userLogin(userData) {
+    try{
     const { username, password } = userData
     let res = await this.request('auth/token',
       { username, password },
       "post")
 
     return res.token
-  }
+  }catch(error){console.log(error)}}
 
 /**POST request for user register to  */
   static async userRegister(userData) {
@@ -74,13 +72,23 @@ class UserApi {
 
   static async userInfo(username) { 
     try {
-      console.log(localStorage.getItem("token"))
       let res = await this.request(`users/${username}`,
         {username},
         "get")
       return res.user
     } catch (error) {
       console.log("UserInfo fetch error: ",error)
+    }
+  }
+
+  static async addDeck(object) {
+    try {
+      console.log("Add Deck: ",Boolean(this.token), this.token)
+      if(this.token){let deckres = await this.request(`decks/`, object, 'POST')
+      return deckres}
+      this.addDecktoUser(object)
+    } catch (error) {
+      console.log("Add Deck Error: ", error)
     }
   }
 
