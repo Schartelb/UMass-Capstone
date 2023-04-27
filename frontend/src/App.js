@@ -1,41 +1,41 @@
 import './App.css';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import Home from './Routes/home';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import CurrUserContext from './Context/CurrUserContext';
 import ApiMethodContext from './Context/ApiMethodContext';
 import useLocalStorageState from './hooks/useLocalStorageState';
-import DollaryApi from './Api/dataApi';
 import UserApi from './Api/userApi';
 import NavBar from './NavBar';
+import LoadingSpinner from './Components/LoadingSpinner'
 import jwt from "jsonwebtoken";
+import DollaryApi from './Api/dataApi';
+import DeckDisplay from './Routes/DeckDisplay';
 
 function App() {
   const [loginorSignup, setLoginorSignup] = useState("")
-  const [currUser, setCurrUser] = useState()
+  const [currUser, setCurrUser] = useState("")
   const [token, setToken] = useLocalStorageState('token', null)
-  const [deckIds, setDeckIds] = useState(new Set([]))
+  const [infoLoaded, setInfoLoaded] = useState(false)
 
   useEffect(function loadUserInfo() {
-    // console.debug("App useEffect loadUserInfo", "token=", token);
 
     async function getCurrentUser() {
       if (token) {
         try {
           let { username } = jwt.decode(token);
-          // put the token on the Api class so it can use it to call the API.
           UserApi.token = token;
+          DollaryApi.token = token
           let currentUser = await UserApi.userInfo(username);
           setCurrUser(currentUser);
-          setDeckIds(new Set(currentUser.decks));
         } catch (err) {
           console.error("App loadUserInfo: problem loading", err);
           setCurrUser(null);
         }
       }
-      // setInfoLoaded(true);
+      setInfoLoaded(true);
     }
-    // setInfoLoaded(false);
+    setInfoLoaded(false);
     getCurrentUser();
   }, [token]);
 
@@ -50,10 +50,6 @@ function App() {
   async function register(userData) {
     try {
       let token = await UserApi.userRegister(userData)
-      // let userInfo = await UserApi.userInfo(userData.username)
-      // setcurrUser({
-      //   ...userInfo
-      // })
       setToken(token)
       setLoginorSignup("")
     } catch (error) {
@@ -68,20 +64,28 @@ function App() {
   }
 
   const userMethods = { "login": login, "register": register, "logout": logout }
+
+  if (!infoLoaded) return <LoadingSpinner />
+
   return (
     <BrowserRouter>
       <CurrUserContext.Provider value={currUser}>
         <ApiMethodContext.Provider value={userMethods}>
-          <NavBar
-            setLoginorSignup={setLoginorSignup}
-          />
-          <main >
-            <Switch>
-              <Route>
-                <Home loginorSignup={loginorSignup} />
-              </Route>
-            </Switch>
-          </main>
+            <NavBar
+              setLoginorSignup={setLoginorSignup}
+            />
+            <main >
+              <Switch>
+                <Route exact path="/">
+                  <Home setInfoLoaded={setInfoLoaded}
+                   loginorSignup={loginorSignup} />
+                </Route>
+                <Route exact path="/:archidekt_num">
+                  <DeckDisplay setInfoLoaded={setInfoLoaded}
+                   loginorSignup={loginorSignup} />
+                </Route>
+              </Switch>
+            </main>
         </ApiMethodContext.Provider>
       </CurrUserContext.Provider>
     </BrowserRouter>

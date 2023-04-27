@@ -1,43 +1,43 @@
-import React, { useState, useContext } from "react";
-import SingleSearch from "../Components/SingleSearch";
-import MultiSearch from "../Components/MultiSearch";
-import ArchidektSearch from "../Components/ArchidektSearch";
+import React, { useState } from "react";
 import CardDisplay from "../Components/CardDisplay";
-import DeckDisplay from "../Components/DeckDisplay";
+// import DeckDisplay from "./DeckDisplay";
 import LoginSignup from "../Components/LoginSignup";
-
+import ProfileCard from "../Components/ProfileCard"
+import SearchForm from "../Components/SearchForm";
+import "./home.css"
 
 const Home = ({ loginorSignup }) => {
     const [singleCard, setSingleCard] = useState(null)
     const [deckList, setDeckList] = useState(null)
-    const [isLoading, setisLoading] = useState(false)
+    const [infoLoaded, setInfoLoaded] = useState(false)
+
     return (<>
-        <div className="modal">
-            <div className="modal_content">
-                <span className="close">&times;</span>
-                <LoginSignup signUpIn={loginorSignup} />
-            </div>
+        <div id="loginsignup" className="card-wrapper">
+            <span id="logclose">&times;</span>
+            <LoginSignup signUpIn={loginorSignup} />
+        </div>
+
+        <div id="profile" className="card-wrapper">
+            <span id="profileclose">&times;</span>
+            <ProfileCard setDeckList={setDeckList} />
         </div>
         <section className="container">
             <div id="col-1">
                 <h2>Welcome to Dollary Deck Check!</h2>
-                <SingleSearch setSingleCard={setSingleCard} />
-                <ArchidektSearch setDeckList={setDeckList} setisLoading={setisLoading} />
-                <MultiSearch setDeckList={setDeckList} setisLoading={setisLoading} />
+                <SearchForm setDeckList={setDeckList} setSingleCard={setSingleCard} setInfoLoaded={setInfoLoaded} />
             </div>
             <div id="col-2">
                 {singleCard === null ?
                     <img className="mtg-card"
                         src="https://i.imgur.com/LdOBU1I.jpeg"
                         alt="Magic Card Back" /> :
-                    <CardDisplay singleCard={singleCard} />}
+                    <CardDisplay singleCard={singleCard} />
+                }
             </div>
         </section>
-        <section className="card-grid" id="deckDisplay">
-            {deckList === null && <h2>No Deck to Display!</h2>}
-            {deckList !== null && <DeckDisplay deckList={deckList}
-                setisLoading={setisLoading} isLoading={isLoading} />}
-        </section>
+        {/* {!infoLoaded && deckList !== null && <section className="card-grid" id="deckDisplay">
+            <DeckDisplay deckList={deckList} />
+        </section>} */}
     </>
     )
 }

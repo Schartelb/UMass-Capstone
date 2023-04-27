@@ -21,7 +21,6 @@ class UserApi {
     const params = (method === "get")
       ? data
       : {};
-
     try {
       return (await axios({ url, method, data, params, headers })).data;
     } catch (err) {
@@ -43,7 +42,7 @@ class UserApi {
       "post")
 
     return res.token
-  }catch(error){console.log(error)}}
+  }catch(error){console.log("Login Error: ",error)}}
 
 /**POST request for user register to  */
   static async userRegister(userData) {
@@ -83,24 +82,21 @@ class UserApi {
 
   static async addDeck(object) {
     try {
-      console.log("Add Deck: ",Boolean(this.token), this.token)
       if(this.token){let deckres = await this.request(`decks/`, object, 'POST')
-      return deckres}
-      this.addDecktoUser(object)
+      this.addDecktoUser(object.archidekt_num)}
     } catch (error) {
       console.log("Add Deck Error: ", error)
     }
   }
 
-  static async addDecktoUser(applyData) {
-    const { username, archidekt_num } = applyData
+  static async addDecktoUser(archidekt_num) {
     try {
-      let res = await this.request(`users/${username}/decks/${archidekt_num}`,
-        { username, archidekt_num },
+      let res = await this.request(`users/decks/${archidekt_num}`,
+        { archidekt_num },
         "post")
       return res.applied
     } catch (error) {
-      console.log(error)
+      console.log("Add Deck to User Error: ",error)
     }
 
   }

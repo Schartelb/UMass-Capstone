@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-// import "./NavBar.css";
+import "./NavBar.css";
 import { NavLink } from "react-router-dom";
 import { Navbar, Nav, NavItem } from "reactstrap";
 import ApiMethodContext from "./Context/ApiMethodContext";
@@ -8,49 +8,65 @@ import CurrUserContext from "./Context/CurrUserContext";
 const NavBar = ({ setLoginorSignup }) => {
     const apiMethods = useContext(ApiMethodContext)
     const currUser = useContext(CurrUserContext)
-    const token = window.localStorage.getItem('token')
     const handleClick = (evt) => {
         let target = evt.target.innerText
-        console.log(target)
         if (target === "Logout") {
             apiMethods.logout()
         }
         else {
             setLoginorSignup(target)
-            const modal = document.querySelector(".modal")
-            const closeBtn = document.querySelector(".close")
+            const loginsignup = document.querySelector("#loginsignup")
+            const closeBtn = document.querySelector("#logclose")
             target === "Login" || target === "Signup" ?
-                modal.style.display = "block" :
-                modal.style.display = "none"
+                loginsignup.style.display = "block" :
+                loginsignup.style.display = "none"
             closeBtn.addEventListener("click", () => {
-                modal.style.display = "none";
+                loginsignup.style.display = "none";
             }
             )
         }
     }
-    const profileClick = (evt)=>{
-        console.log("Profile: ", currUser)
+    const profileClick = () => {
+        const profile = document.querySelector("#profile")
+        profile.style.display = "block"
+        const closeBtn = document.querySelector("#profileclose")
+        closeBtn.addEventListener("click", () => {
+            profile.style.display = "none";
+        }
+        )
+    }
+
+    function loggedOutNav() {
+        return (
+            <>
+                <NavItem className="nav">
+                    <div onClick={handleClick}>Login</div >
+                </NavItem>
+                <NavItem className="nav">
+                    <div onClick={handleClick}>Signup</div >
+                </NavItem>
+            </>
+        )
+    }
+
+    function loggedInNav() {
+        return (
+            <>
+                <NavItem onClick={profileClick}>
+                    Profile
+                </NavItem >
+                <NavItem className="nav" onClick={handleClick}>Logout</NavItem>
+            </>
+        )
     }
     return (
         <div>
             <Navbar expand="md">
                 <NavLink exact to="/" className="navbar-brand">
-                    Dollary Deck Check Home!
+                    Home
                 </NavLink>
-
                 <Nav className="ml-auto" navbar>
-
-                    {token === "null" && <> <NavItem className="nav">
-                        <div onClick={handleClick}>Login</div >
-                    </NavItem>
-                        <NavItem className="nav">
-                            <div onClick={handleClick}>Signup</div >
-                        </NavItem></>}
-                    {token !== "null" && <><NavItem onClick={profileClick}>
-                        Profile
-                    </NavItem >
-                        <NavItem className="nav" onClick={handleClick}>Logout</NavItem></>}
-
+                {currUser ? loggedInNav():loggedOutNav()}
                 </Nav>
             </Navbar>
         </div>
