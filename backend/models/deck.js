@@ -9,38 +9,37 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 class Deck {
   /** Create a deck (from data), update db, return new deck data.
    *
-   * data should be { archidekt_num, name, commander,commander_url }
+   * data should be { archidekt_num, name }
    *
-   * Returns { archidekt_num, name, commander,commander_url }
+   * Returns { archidekt_num, name }
    *
-   * Throws BadRequestError if deck already in database.
+   * Throws console.log if deck already in database.
    * */
 
   static async create({ archidekt_num, name }) {
     const duplicateCheck = await db.query(
-          `SELECT archidekt_num
+      `SELECT archidekt_num
            FROM decks
            WHERE archidekt_num = $1`,
-        [archidekt_num]);
+      [archidekt_num]);
 
     if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate deck: ${archidekt_num}`);
+      return(duplicateCheck.rows[0]);
 
     const result = await db.query(
-          `INSERT INTO decks
+      `INSERT INTO decks
            (archidekt_num, name)
            VALUES ($1, $2)
            RETURNING archidekt_num, name`,
-        [
-          archidekt_num,
-          name
-        ],
+      [
+        archidekt_num,
+        name
+      ],
     );
     const deck = result.rows[0];
 
     return deck;
   }
-
 
   /** Given a deck archidekt number, return data about deck.
    *
@@ -51,13 +50,11 @@ class Deck {
 
   static async get(archidekt_num) {
     const deckRes = await db.query(
-          `SELECT archidekt_num,
-                  name,
-                  commander,
-                  commander_url AS "commanderUrl"
+      `SELECT archidekt_num,
+                  name"
            FROM decks
            WHERE archidekt_num = $1`,
-        [archidekt_num]);
+      [archidekt_num]);
 
     const deck = deckRes.rows[0];
 
@@ -66,8 +63,6 @@ class Deck {
     return deck;
   }
 
- 
-
   /** Delete given Deck from database; returns undefined.
    *
    * Throws NotFoundError if Deck not found.
@@ -75,11 +70,11 @@ class Deck {
 
   static async remove(archidekt_num) {
     const result = await db.query(
-          `DELETE
+      `DELETE
            FROM decks
            WHERE archidekt_num = $1
            RETURNING archidekt_num`,
-        [archidekt_num]);
+      [archidekt_num]);
     const deck = result.rows[0];
 
     if (!deck) throw new NotFoundError(`No Deck: ${archidekt_num}`);

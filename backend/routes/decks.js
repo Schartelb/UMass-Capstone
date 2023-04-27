@@ -23,12 +23,10 @@ const router = new express.Router();
  * Authorization required: correct user or Admin
  */
 
-router.post("/", /*ensureLoggedIn,*/ async function (req, res, next) {
+router.post("/", ensureLoggedIn, async function (req, res, next) {
   try {
-    console.log("Validator",validator.valid)
-    console.log("res.locals", res.locals.user)
     const validator = jsonschema.validate(req.body, deckNewSchema);
-if (!validator.valid) {
+    if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
       throw new BadRequestError(errs);
     }

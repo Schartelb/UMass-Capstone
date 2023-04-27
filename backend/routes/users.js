@@ -55,7 +55,6 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 
 router.get("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
   try {
-    console.log(req.params.username)
     const user = await User.get(req.params.username);
     return res.json({ user });
   } catch (err) {
@@ -112,10 +111,10 @@ router.delete("/:username", ensureCorrectUserOrAdmin, async function (req, res, 
  * Authorization required: admin or same-user-as-:username
  * */
 
-router.post("/:username/decks/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.post("/decks/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
   try {
     const deckId = +req.params.id;
-    await User.addDecktoUser(req.params.username, deckId);
+    await User.addDecktoUser(res.locals.user.username, deckId);
     return res.json({ Added: deckId });
   } catch (err) {
     return next(err);

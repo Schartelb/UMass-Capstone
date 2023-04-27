@@ -24,7 +24,7 @@ class User {
   static async authenticate(username, password) {
     // try to find the user first
     const result = await db.query(
-          `SELECT username,
+      `SELECT username,
                   password,
                   first_name AS "firstName",
                   last_name AS "lastName",
@@ -32,7 +32,7 @@ class User {
                   is_admin AS "isAdmin"
            FROM users
            WHERE username = $1`,
-        [username],
+      [username],
     );
 
     const user = result.rows[0];
@@ -57,12 +57,12 @@ class User {
    **/
 
   static async register(
-      { username, password, firstName, lastName, email, isAdmin }) {
+    { username, password, firstName, lastName, email, isAdmin }) {
     const duplicateCheck = await db.query(
-          `SELECT username
+      `SELECT username
            FROM users
            WHERE username = $1`,
-        [username],
+      [username],
     );
 
     if (duplicateCheck.rows[0]) {
@@ -72,7 +72,7 @@ class User {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
     const result = await db.query(
-          `INSERT INTO users
+      `INSERT INTO users
            (username,
             password,
             first_name,
@@ -81,14 +81,14 @@ class User {
             is_admin)
            VALUES ($1, $2, $3, $4, $5, $6)
            RETURNING username, first_name AS "firstName", last_name AS "lastName", email, is_admin AS "isAdmin"`,
-        [
-          username,
-          hashedPassword,
-          firstName,
-          lastName,
-          email,
-          isAdmin,
-        ],
+      [
+        username,
+        hashedPassword,
+        firstName,
+        lastName,
+        email,
+        isAdmin,
+      ],
     );
 
     const user = result.rows[0];
@@ -99,8 +99,8 @@ class User {
 
   /** Given a username, return data about user.
    *
-   * Returns { username, first_name, last_name, is_admin, jobs }
-   *   where jobs is { id, title, company_handle, company_name, state }
+   * Returns { username, first_name, last_name, is_admin, deck }
+   *   where deck is { archidekt_num, name }
    *
    * Throws NotFoundError if user not found.
    **/
@@ -108,14 +108,14 @@ class User {
   static async get(username) {
     console.log("user model user.get")
     const userRes = await db.query(
-          `SELECT username,
+      `SELECT username,
                   first_name AS "firstName",
                   last_name AS "lastName",
                   email,
                   is_admin AS "isAdmin"
            FROM users
            WHERE username = $1`,
-        [username],
+      [username],
     );
 
     const user = userRes.rows[0];
@@ -123,11 +123,14 @@ class User {
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
     const userDecksRes = await db.query(
-          `SELECT ud.archidekt_num
+      `SELECT ud.archidekt_num, dl.name
            FROM user_decks AS ud
+           JOIN decks AS dl
+           ON ud.archidekt_num = dl.archidekt_num
            WHERE ud.username = $1`, [username]);
 
-    user.decks = userDecksRes.rows.map(a => a.job_id);
+    
+    user.decks = userDecksRes.rows
     return user;
   }
 
@@ -154,12 +157,12 @@ class User {
     }
 
     const { setCols, values } = sqlForPartialUpdate(
-        data,
-        {
-          firstName: "first_name",
-          lastName: "last_name",
-          isAdmin: "is_admin",
-        });
+      data,
+      {
+        firstName: "first_name",
+        lastName: "last_name",
+        isAdmin: "is_admin",
+      });
     const usernameVarIdx = "$" + (values.length + 1);
 
     const querySql = `UPDATE users 
@@ -183,11 +186,11 @@ class User {
 
   static async remove(username) {
     let result = await db.query(
-          `DELETE
+      `DELETE
            FROM users
            WHERE username = $1
            RETURNING username`,
-        [username],
+      [username],
     );
     const user = result.rows[0];
 
@@ -201,8 +204,17 @@ class User {
    **/
 
   static async addDecktoUser(username, archidekt_num) {
+    const duplicateCheck = await db.query(
+      `SELECT archidekt_num, username
+           FROM user_decks
+           WHERE archidekt_num = $1 AND username=$2`,
+      [archidekt_num, username]);
+
+    if (duplicateCheck.rows[0])
+      return (duplicateCheck.rows[0]);
+
     const preCheck = await db.query(
-          `SELECT archidekt_num
+      `SELECT archidekt_num
            FROM decks
            WHERE archidekt_num = $1`, [archidekt_num]);
     const deck = preCheck.rows[0];
@@ -210,7 +222,7 @@ class User {
     if (!deck) throw new NotFoundError(`No deck: ${archidekt_num}`);
 
     const preCheck2 = await db.query(
-          `SELECT username
+      `SELECT username
            FROM users
            WHERE username = $1`, [username]);
     const user = preCheck2.rows[0];
@@ -218,9 +230,9 @@ class User {
     if (!user) throw new NotFoundError(`No username: ${username}`);
 
     await db.query(
-          `INSERT INTO user_decks (archidekt_num, username)
+      `INSERT INTO user_decks (archidekt_num, username)
            VALUES ($1, $2)`,
-        [archidekt_num, username]);
+      [archidekt_num, username]);
   }
 }
 
