@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import CardDisplay from "../Components/CardDisplay";
-// import DeckDisplay from "./DeckDisplay";
 import LoginSignup from "../Components/LoginSignup";
 import ProfileCard from "../Components/ProfileCard"
 import SearchForm from "../Components/SearchForm";
 import "./home.css"
 
 const Home = ({ loginorSignup }) => {
-    const [singleCard, setSingleCard] = useState(null)
+    const [cardList, setCardList] = useState(null)
     const [deckList, setDeckList] = useState(null)
     const [infoLoaded, setInfoLoaded] = useState(false)
 
@@ -19,19 +18,19 @@ const Home = ({ loginorSignup }) => {
 
         <div id="profile" className="card-wrapper">
             <span id="profileclose">&times;</span>
-            <ProfileCard setDeckList={setDeckList} />
+            <ProfileCard />
         </div>
         <section className="container">
             <div id="col-1">
                 <h2>Welcome to Dollary Deck Check!</h2>
-                <SearchForm setDeckList={setDeckList} setSingleCard={setSingleCard} setInfoLoaded={setInfoLoaded} />
+                <SearchForm setCardList={setCardList} setInfoLoaded={setInfoLoaded} />
             </div>
             <div id="col-2">
-                {singleCard === null ?
+                {cardList === null ?
                     <img className="mtg-card"
                         src="https://i.imgur.com/LdOBU1I.jpeg"
                         alt="Magic Card Back" /> :
-                    <CardDisplay singleCard={singleCard} />
+                    <CardDisplay cardList={cardList} />
                 }
             </div>
         </section>

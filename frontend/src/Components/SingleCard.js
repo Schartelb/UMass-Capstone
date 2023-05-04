@@ -2,13 +2,23 @@ import React from "react";
 
 const SingleCard = ({card}) => {
     
-    return(
-        <a href={card.rulings}>
-        <div className="card-grid-item-card-faces">
-        <img alt={card.name} className="card" src={card.img}/>
-        </div>
-        </a>
-    )    
+    const legalCard = () => {
+        return (<a href={card.rulings}>
+            <img className="mtg-card"
+                src={card.img}
+                alt={card.name}
+                title={card.name} /></a>)
+    }
+
+    const illegalCard = () => {
+        return (<a href={card.rulings}><img className="mtg-card illegal"
+            src={card.img}
+            alt={card.name}
+            title={card.name} />
+        </a>)
+
+    }
+    return card.price > 1 ? illegalCard() : legalCard()
 }
 
 export default SingleCard

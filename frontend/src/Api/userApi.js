@@ -82,7 +82,7 @@ class UserApi {
 
   static async addDeck(object) {
     try {
-      if(this.token){let deckres = await this.request(`decks/`, object, 'POST')
+      if(this.token){await this.request(`decks/`, object, 'POST')
       this.addDecktoUser(object.archidekt_num)}
     } catch (error) {
       console.log("Add Deck Error: ", error)

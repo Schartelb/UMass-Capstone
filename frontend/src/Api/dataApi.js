@@ -21,41 +21,45 @@ class DollaryApi {
   }
 
   static async singleGet(name) {
-    if(name!==undefined){
-    try {
-      let cardData = await this.request(SCRYFALL + `search?q=${name} order:usd`)
-      return cardData.data
+    if (name !== undefined) {
+      try {
+        let cardData = await this.request(SCRYFALL + `search?q=${name} order:usd`)
+        return cardData.data
+      }
+      catch (error) {
+        console.log("Single Card Search Error: ", error)
+      }
     }
-    catch (error) {
-      console.log("Single Card Search Error: ", error)
-    }}
   }
 
   /** Takes input, formats into array, then returns formatted list from Scryfall */
   static async multiCall(cardList) {
-    try{
-    let cardArray = cardList.split('\n')
-    let cardListOut = await this.formatResponse(cardArray.map(card => `!"${card}"`))
-    return cardListOut
-  }catch(error){
-    console.log("Multicall Error: ", error)
-  }}
+    try {
+      // let cardArray = cardList.split('\n')
+      let cardListOut = await this.formatResponse(cardList.map(card => `!"${card}"`))
+      return cardListOut
+    } catch (error) {
+      console.log("Multicall Error: ", error)
+    }
+  }
 
   /** Calls Archidekt API and returns entire Deck list */
   static async archidekt(deck) {
     try {
-      let res = await this.request(ARCHIDEKT + deck + "/")
+      return await this.request(ARCHIDEKT + deck + "/")
         .then(response => {
-          if (this.token){
+          if (this.token) {
             console.log("Adding Deck to user")
             UserApi.addDeck({
               "archidekt_num": response.id,
               "name": response.name
             })
           }
-          this.formatResponse(response.cards.map(card => `!"${card.card.oracleCard.name}"`))
+          return response.cards.map(card=>card.card.oracleCard.name)
         })
-      return (res)
+      // console.log(res)
+      // let deckdata = await this.formatResponse(res.cards.map(card => `!"${card.card.oracleCard.name}"`))
+
     }
     catch (error) {
       console.log("Archidekt Fetch Error: ", error)
@@ -63,10 +67,9 @@ class DollaryApi {
   }
 
   static async formatResponse(cardList) {
-    let deckInfo = Promise.all(cardList.map(async (card) => await this.singleGet(card)))
+    let deckInfo = await Promise.all(cardList.map(async (card) => await this.singleGet(card)))
     try {
-      const dataDump = await deckInfo
-      let formattedData = dataDump.map((card) => {
+      let formattedData = deckInfo.map((card) => {
         let cardInfo = card[0]
         let output = {}
         output["name"] = cardInfo.name
@@ -83,6 +86,7 @@ class DollaryApi {
         return output
       }
       )
+      // console.log("formatted Data ", formattedData)
       return formattedData
     } catch (error) {
       console.log("Format Error: ", error)

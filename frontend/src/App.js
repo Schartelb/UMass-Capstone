@@ -4,6 +4,7 @@ import Home from './Routes/home';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import CurrUserContext from './Context/CurrUserContext';
 import ApiMethodContext from './Context/ApiMethodContext';
+import DeckContext from './Context/DeckContext';
 import useLocalStorageState from './hooks/useLocalStorageState';
 import UserApi from './Api/userApi';
 import NavBar from './NavBar';
@@ -17,6 +18,7 @@ function App() {
   const [currUser, setCurrUser] = useState("")
   const [token, setToken] = useLocalStorageState('token', null)
   const [infoLoaded, setInfoLoaded] = useState(false)
+  const [deckList, setDeckList] = useState(null)
 
   useEffect(function loadUserInfo() {
 
@@ -64,13 +66,14 @@ function App() {
   }
 
   const userMethods = { "login": login, "register": register, "logout": logout }
-
+  const deckMethods = {"deckList":deckList, "setDeckList":setDeckList}
   if (!infoLoaded) return <LoadingSpinner />
 
   return (
     <BrowserRouter>
       <CurrUserContext.Provider value={currUser}>
         <ApiMethodContext.Provider value={userMethods}>
+          <DeckContext.Provider value={deckMethods}>
             <NavBar
               setLoginorSignup={setLoginorSignup}
             />
@@ -81,11 +84,11 @@ function App() {
                    loginorSignup={loginorSignup} />
                 </Route>
                 <Route exact path="/:archidekt_num">
-                  <DeckDisplay setInfoLoaded={setInfoLoaded}
-                   loginorSignup={loginorSignup} />
+                  <DeckDisplay setInfoLoaded={setInfoLoaded}/>
                 </Route>
               </Switch>
             </main>
+            </DeckContext.Provider>
         </ApiMethodContext.Provider>
       </CurrUserContext.Provider>
     </BrowserRouter>

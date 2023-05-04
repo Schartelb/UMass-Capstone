@@ -2,8 +2,10 @@ import React, { useContext, useState } from "react";
 import DollaryApi from "../Api/dataApi";
 import { useHistory } from "react-router-dom";
 import "./SearchForm.css"
+import DeckContext from "../Context/DeckContext";
 
-const SearchForm = ({  setDeckList, setSingleCard, setInfoLoaded }) => {
+const SearchForm = ({ setCardList, setInfoLoaded }) => {
+    const deckMethods = useContext(DeckContext)
     const history = useHistory()
     const [formData, setFormData] = useState()
     const handleChange = evt => {
@@ -16,35 +18,38 @@ const SearchForm = ({  setDeckList, setSingleCard, setInfoLoaded }) => {
 
     const handleSingleSubmit = (evt) => {
         evt.preventDefault()
-        DollaryApi.formatResponse([formData.cardName]).then((c) => {
-            setSingleCard(c[0])
-        }).catch(err => {
-            console.log(err)
-        })
+        console.log("Single Search")
+        DollaryApi.formatResponse([formData.cardName])
+            .then((c) => {
+                setCardList(c)
+            }).catch(err => {
+                console.log(err)
+            })
     }
     const handleMultiSubmit = evt => {
         evt.preventDefault()
-        DollaryApi.multiCall(formData.cardList).then((d) => {
-            console.log(d)
-            setDeckList(d.data)
+        DollaryApi.multiCall(["Strip Mine", "Ornithopter", "Lotus Cobra"]).then((d) => {
+            setCardList(d)
         }).catch(error => {
             console.log("MultiSearch Error: ", error)
         })
     }
     const handleArchidektSubmit = evt => {
-        setInfoLoaded(false)
         evt.preventDefault()
-        // console.log(formData.deckNumber)
-        DollaryApi.archidekt(formData.deckNumber)
-            .then(d => { setDeckList(d) })
-            .then(history.push(`/${formData.deckNumber}`))
+        setInfoLoaded(false)
+        DollaryApi.archidekt(1400515)
+            .then(async (d) => {
+                deckMethods.setDeckList(await DollaryApi.formatResponse(d))
+            })
+            .then(history.push('/1400515'))
             .catch(err => {
                 console.log(err)
             })
+        // .finally(console.log(deckMethods.deckList))
     }
     return (
-        <>
-            <form className="form-wrapper">
+        <div className="form-wrapper">
+            <form >
                 <label className="input" htmlFor="cardName">Card Name: </label>
                 <input
                     type='text'
@@ -53,7 +58,9 @@ const SearchForm = ({  setDeckList, setSingleCard, setInfoLoaded }) => {
                     onChange={handleChange}
                     placeholder="Card Name"
                 />
-                <button type="submit" onClick={(handleSingleSubmit)}>Search</button>
+                <button onClick={handleSingleSubmit}>Search</button>
+            </form>
+            <form>
                 <label className="input" htmlFor="deckNumber">Archidekt Deck Number: </label>
                 <input
                     type='number'
@@ -63,7 +70,9 @@ const SearchForm = ({  setDeckList, setSingleCard, setInfoLoaded }) => {
                     placeholder="Deck Number"
                     maxLength={7}
                 />
-                <button type="submit" onClick={handleArchidektSubmit}>Search</button>
+                <button onClick={handleArchidektSubmit}>Search</button>
+            </form>
+            <form>
                 <label className="input" htmlFor="cardList">Card Names: </label>
                 <textarea
                     type='text'
@@ -72,11 +81,10 @@ const SearchForm = ({  setDeckList, setSingleCard, setInfoLoaded }) => {
                     onChange={handleChange}
                     placeholder="One Card per Line"
                 />
-                <button type="submit" onClick={handleMultiSubmit}>Search
-                </button>
+                <button onClick={handleMultiSubmit}>Search</button>
             </form>
 
-        </>
+        </div>
     )
 
 }

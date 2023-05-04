@@ -1,0 +1,29 @@
+.Carousel {
+  height: 100%;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 100px;
+  grid-row-gap: 0px;
+}
+
+.bi {
+  position: absolute;
+
+  top: 0;
+}
+
+.bi-arrow-right-circle {
+  cursor: pointer;
+  height: 100%;
+  width:12%;
+  grid-area:2/2;
+}
+
+.bi-arrow-left-circle {
+  cursor: pointer;
+  height: 100%;
+  left: 0;
+  grid-area:1/1
+}
