@@ -12,7 +12,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class UserApi {
   // the token for interactive with the API will be stored here.
-   static token;
+  static token;
 
   static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
@@ -32,19 +32,20 @@ class UserApi {
 
   // Individual API routes
 
-/** POST request for user token */
+  /** POST request for user token */
 
   static async userLogin(userData) {
-    try{
-    const { username, password } = userData
-    let res = await this.request('auth/token',
-      { username, password },
-      "post")
+    try {
+      const { username, password } = userData
+      let res = await this.request('auth/token',
+        { username, password },
+        "post")
 
-    return res.token
-  }catch(error){console.log("Login Error: ",error)}}
+      return res.token
+    } catch (error) { console.log("Login Error: ", error) }
+  }
 
-/**POST request for user register to  */
+  /**POST request for user register to  */
   static async userRegister(userData) {
     const { username, password, firstName, lastName, email } = userData
     try {
@@ -69,21 +70,23 @@ class UserApi {
     }
   }
 
-  static async userInfo(username) { 
+  static async userInfo(username) {
     try {
       let res = await this.request(`users/${username}`,
-        {username},
+        { username },
         "get")
       return res.user
     } catch (error) {
-      console.log("UserInfo fetch error: ",error)
+      console.log("UserInfo fetch error: ", error)
     }
   }
 
   static async addDeck(object) {
     try {
-      if(this.token){await this.request(`decks/`, object, 'POST')
-      this.addDecktoUser(object.archidekt_num)}
+      if (this.token) {
+        await this.request(`decks/`, object, 'POST')
+        this.addDecktoUser(object.archidekt_num)
+      }
     } catch (error) {
       console.log("Add Deck Error: ", error)
     }
@@ -96,9 +99,19 @@ class UserApi {
         "post")
       return res.applied
     } catch (error) {
-      console.log("Add Deck to User Error: ",error)
+      console.log("Add Deck to User Error: ", error)
     }
+  }
 
+  static async removeDeck(archidekt_num) {
+    try {
+      let res = await this.request(`decks/${archidekt_num}`,
+        { archidekt_num },
+        "DELETE")
+      console.log(res)
+    } catch (error) {
+      console.log("Deck Deletion Error: ", error)
+    }
   }
 }
 

@@ -5,7 +5,7 @@
     align-items: flex-start;
     align-content: flex-start;
     flex: 1 0 20%;
-    margin:15px
+    margin: 15px
 }
 
 @media (max-width: 800px) {
@@ -15,28 +15,28 @@
 }
 
 .card-grid-inner .mtg-card {
-    display:flex;
-    flex:1 0 20%;
-    width:calc(100%*1/6);
+    display: flex;
+    flex: 1 0 20%;
+    width: calc(100%*1/6);
     height: auto;
-    position:relative;
-    margin:2px;
+    position: relative;
+    margin: 2px;
 }
 
 .card-grid-inner .illegal {
-    display:flex;
-    flex:1 0 20%;
-    width:calc(100%*1/6);
-    height:auto;
-    position:relative;
-    margin:2px;
+    display: flex;
+    flex: 1 0 20%;
+    width: calc(100%*1/6);
+    height: auto;
+    position: relative;
+    margin: 2px;
 }
 
-.card-grid-inner a{
-    display:flex;
-    flex:1 0 20%;
+.card-grid-inner a {
+    display: flex;
+    flex: 1 0 20%;
 }
 
-.navbar-brand{
-    width:fit-content;
+.navbar-brand {
+    width: fit-content;
 }

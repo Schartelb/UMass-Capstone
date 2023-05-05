@@ -153,15 +153,36 @@ label {
     margin: 0;
     padding: 0;
     cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 2fr;
 }
 
 .profile-decklink {
-    width: fit-content;
-    text-align: center;
+    grid-column: 1/1;
+    width: 100%;
+    text-align: left;
     color: rgb(104, 104, 104);
     padding: 7.5px 0 7.5px 0
 }
 
+ul .remove-button {
+    display: inline;
+    width: 25px;
+    height: 25px;
+    background-color: rgb(164, 0, 0);
+    padding: 7.5px 7.5px 7.5px 7.5px;
+    margin: 10% 0% 0% 50%;
+}
+
+ul .remove-button:hover {
+    background-color: rgb(124, 0, 0);
+    font-weight: bold;
+}
+
+button div {
+    margin-top: -7.5px;
+}
+
 .mtg-card {
-    height:100%
+    height: 100%
 }

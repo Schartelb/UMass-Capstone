@@ -36,7 +36,7 @@ class DollaryApi {
   static async multiCall(cardList) {
     try {
       let cardArray = cardList.split('\n')
-      let cardListOut = await this.formatResponse(cardList.map(card => `!"${card}"`))
+      let cardListOut = await this.formatResponse(cardArray.map(card => `!"${card}"`))
       return cardListOut
     } catch (error) {
       console.log("Multicall Error: ", error)
@@ -55,7 +55,7 @@ class DollaryApi {
               "name": response.name
             })
           }
-          return response.cards.map(card=>card.card.oracleCard.name)
+          return response.cards.map(card=>`!"${card.card.oracleCard.name}"`)
         })
       // console.log(res)
       // let deckdata = await this.formatResponse(res.cards.map(card => `!"${card.card.oracleCard.name}"`))

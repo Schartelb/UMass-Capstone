@@ -1,12 +1,16 @@
 import React, { useContext, useState } from "react";
 import DollaryApi from "../Api/dataApi";
+import UserApi from "../Api/userApi";
 import { useHistory } from "react-router-dom";
 import "./SearchForm.css"
 import DeckContext from "../Context/DeckContext";
+import CurrUserContext from "../Context/CurrUserContext";
+
 
 const SearchForm = ({ setCardList, setInfoLoaded }) => {
     const deckMethods = useContext(DeckContext)
     const history = useHistory()
+    const userContext = useContext(CurrUserContext)
     const [formData, setFormData] = useState()
     const handleChange = evt => {
         const { name, value } = evt.target;
@@ -18,33 +22,47 @@ const SearchForm = ({ setCardList, setInfoLoaded }) => {
 
     const handleSingleSubmit = (evt) => {
         evt.preventDefault()
-        console.log("Single Search")
-        DollaryApi.formatResponse([formData.cardName])
-            .then((c) => {
-                setCardList(c)
-            }).catch(err => {
-                console.log(err)
-            })
+        try {
+            console.log("Single Search")
+            DollaryApi.formatResponse([formData.cardName])
+                .then((c) => {
+                    setCardList(c)
+                }).catch(err => {
+                    console.log(err)
+                })
+        } catch (error) {
+            alert("Search Error! Please Try again")
+        }
     }
     const handleMultiSubmit = evt => {
         evt.preventDefault()
-        DollaryApi.multiCall(formData.cardList).then((d) => {
-            setCardList(d)
-        }).catch(error => {
-            console.log("MultiSearch Error: ", error)
-        })
+        try {
+            DollaryApi.multiCall(formData.cardList)
+                .then((d) => {
+                    setCardList(d)
+                }).catch(error => {
+                    console.log("MultiSearch Error: ", error)
+                })
+        } catch (error) {
+            alert("Search Error! Please Try again")
+        }
     }
     const handleArchidektSubmit = evt => {
         evt.preventDefault()
-        setInfoLoaded(false)
-        DollaryApi.archidekt(formData.deckNumber)
-            .then(async (d) => {
-                deckMethods.setDeckList(await DollaryApi.formatResponse(d))
-            })
-            .then(history.push(`/${formData.deckNumber}`))
-            .catch(err => {
-                console.log(err)
-            })
+        try {
+            setInfoLoaded(false)
+            DollaryApi.archidekt(formData.deckNumber)
+                .then(async (d) => {
+                    deckMethods.setDeckList(await DollaryApi.formatResponse(d))
+                })
+                .then(async () => userContext.setCurrUser(await UserApi.userInfo(userContext.currUser.username)))
+                .then(history.push(`/${formData.deckNumber}`))
+                .catch(err => {
+                    console.log(err)
+                })
+        } catch (error) {
+            alert("Search Error! Please Try again")
+        }
     }
     return (
         <div className="form-wrapper">
