@@ -1,0 +1,29 @@
+.App {
+  text-align: center;
+
+}
+
+#root {
+  background-color:rgb(160, 160, 160)
+}
+
+.container {
+  background-color: rgb(160, 160, 160);
+  position: relative;
+  display: flex;
+  height: 50vh;
+  min-height: 350px;
+}
+
+#col-1 {
+  background-color: transparent;
+  flex: 1;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+}
+
+/* #col-2 {
+  width: 125%;
+} */

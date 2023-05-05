@@ -1,0 +1,188 @@
+.card-wrapper {
+    background-color: #f6f6f6;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#eae8e8));
+    background-image: -webkit-linear-gradient(top, #f6f6f6, #eae8e8);
+    background-image: -moz-linear-gradient(top, #f6f6f6, #eae8e8);
+    background-image: -ms-linear-gradient(top, #f6f6f6, #eae8e8);
+    background-image: -o-linear-gradient(top, #f6f6f6, #eae8e8);
+    background-image: linear-gradient(top, #f6f6f6, #eae8e8);
+    border-color: #dedede #bababa #aaa #bababa;
+    border-style: solid;
+    border-width: 1px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 3px 3px rgba(255, 255, 255, .1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
+    -moz-box-shadow: 0 3px 3px rgba(255, 255, 255, .1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
+    box-shadow: 0 3px 3px rgba(255, 255, 255, .1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
+    margin: auto;
+    overflow: hidden;
+    padding: 8px;
+    width: 300px;
+    height: fit-content;
+}
+
+.card-wrapper span {
+
+    -webkit-box-shadow: 0 2px 2px #d0d0d0, 0 2px 0 #FFF;
+    -moz-box-shadow: 0 2px 2px #d0d0d0, 0 2px 0 #FFF;
+    box-shadow: 0 2px 2px #d0d0d0, 0 2px 0 #FFF;
+}
+
+.card-wrapper span:hover {
+    -webkit-box-shadow: 0 2px 2px #d0d0d0 inset, 0 2px 0 #FFF;
+    -moz-box-shadow: 0 2px 2px #d0d0d0 inset, 0 2px 0 #FFF;
+    box-shadow: 0 2px 2px #d0d0d0 inset, 0 2px 0 #FFF;
+    cursor: pointer;
+}
+
+.card-wrapper input {
+    border: 1px solid #CCC;
+    -webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #FFF;
+    -moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #FFF;
+    box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #FFF;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #5c5c5c;
+    float: left;
+    font: 16px Lucida Sans, Trebuchet MS, Tahoma, sans-serif;
+    height: 20px;
+    padding: 3px;
+    width: 140px;
+}
+
+.card-wrapper #search:focus {
+    border-color: #aaa;
+    -webkit-box-shadow: 0 1px 1px #bbb inset;
+    -moz-box-shadow: 0 1px 1px #bbb inset;
+    box-shadow: 0 1px 1px #bbb inset;
+    outline: 0;
+}
+
+.card-wrapper #search:-moz-placeholder,
+.card-wrapper #search:-ms-input-placeholder,
+.card-wrapper #search::-webkit-input-placeholder {
+    color: #999;
+    font-weight: normal;
+}
+
+.card-wrapper #submit {
+    background-color: #0483a0;
+    background-image: -webkit-linear-gradient(top, #31b2c3, #0483a0);
+    background-image: -moz-linear-gradient(top, #31b2c3, #0483a0);
+    background-image: -ms-linear-gradient(top, #31b2c3, #0483a0);
+    background-image: -o-linear-gradient(top, #31b2c3, #0483a0);
+    background-image: linear-gradient(top, #31b2c3, #0483a0);
+    border: 1px solid #00748f;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #FFF;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #FFF;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #FFF;
+    color: #fafafa;
+    cursor: pointer;
+    height: 42px;
+    float: right;
+    font: 15px Arial, Helvetica;
+    padding: 0;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .3);
+    width: 100px;
+}
+
+.card-wrapper #submit:hover,
+.card-wrapper #submit:focus {
+    background-color: #31b2c3;
+    background-image: -webkit-linear-gradient(top, #0483a0, #31b2c3);
+    background-image: -moz-linear-gradient(top, #0483a0, #31b2c3);
+    background-image: -ms-linear-gradient(top, #0483a0, #31b2c3);
+    background-image: -o-linear-gradient(top, #0483a0, #31b2c3);
+    background-image: linear-gradient(top, #0483a0, #31b2c3);
+}
+
+.card-wrapper #submit:active {
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+    outline: 0;
+}
+
+.card-wrapper #submit::-moz-focus-inner {
+    border: 0;
+}
+
+#loginsignup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    margin: 12px;
+}
+
+#loginsignup_content {
+    position: absolute;
+}
+
+label {
+    grid-column: 1/2;
+}
+
+#profile {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    margin: 12px;
+
+}
+
+.profile_content {
+    background-color: white;
+    position: absolute;
+}
+
+.profile-username {
+    color: rgb(104, 104, 104);
+    text-decoration: none;
+    width: fit-content;
+    margin: 0 10px 0;
+    cursor: pointer;
+}
+
+.profile-decklist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 2fr;
+}
+
+.profile-decklink {
+    grid-column: 1/1;
+    width: 100%;
+    text-align: left;
+    color: rgb(104, 104, 104);
+    padding: 7.5px 0 7.5px 0
+}
+
+ul .remove-button {
+    display: inline;
+    width: 25px;
+    height: 25px;
+    background-color: rgb(164, 0, 0);
+    padding: 7.5px 7.5px 7.5px 7.5px;
+    margin: 10% 0% 0% 50%;
+}
+
+ul .remove-button:hover {
+    background-color: rgb(124, 0, 0);
+    font-weight: bold;
+}
+
+button div {
+    margin-top: -7.5px;
+}
+
+.mtg-card {
+    height: 100%
+}

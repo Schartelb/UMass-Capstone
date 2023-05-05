@@ -1,0 +1,56 @@
+.mtg-card {
+  position: absolute;
+  border-radius: 5%;
+  height: 100%;
+  display: inline;
+}
+
+.illegal {
+  position: absolute;
+  height: 100%;
+  outline: rgb(196, 0, 0) solid 10px;
+  outline-offset: -10px;
+}
+
+/* a {
+  object-fit: contain;
+  display: inline;
+} */
+
+.Carousel {
+  position: absolute;
+  display: inline-grid;
+  grid-template-columns: 2;
+  justify-content: space-between;
+  column-gap: 10em;
+}
+
+.overlay {
+  position: absolute;
+  height:50vh;
+
+}
+
+.bi {
+  position: absolute;
+  inline-size: 10em;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  display: inline;
+transition: .3s ease ;
+}
+
+.bi-arrow-left-circle {
+  top: 0%;
+  left: 50%;
+  transform: translate(-25%, 150%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.bi-arrow-right-circle {
+  top: 0%;
+  left: 125%;
+  transform: translate(215%, 150%);
+  -ms-transform: translate(-50%, -50%);
+}
